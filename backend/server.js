@@ -20,7 +20,7 @@ app.use(helmet());
 app.use(cors());
 app.use(morgan("dev"));
 
-app.get("/api/product", productRoutes);
+app.use("/api/products", productRoutes);
 
 async function initDB() {
     try {
