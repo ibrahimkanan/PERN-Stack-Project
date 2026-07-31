@@ -1,10 +1,11 @@
-import express from "express";
+import express, { request } from "express";
 import helmet from "helmet";
 import cors from "cors";
 import morgan from "morgan";
 import dotenv from "dotenv";
 import { sql } from "./config/db.js";
 import productRoutes from "./routes/productRoutes.js";
+import rateLimit from "./middleware/rateLimit.js";
 
 dotenv.config();
 
@@ -19,6 +20,9 @@ app.use(helmet());
 
 app.use(cors());
 app.use(morgan("dev"));
+
+// apply arcjet rate limit to all routes
+app.use(rateLimit);
 
 app.use("/api/products", productRoutes);
 
