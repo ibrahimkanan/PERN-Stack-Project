@@ -1,17 +1,17 @@
-import  aj  from "@arcjet/node";
+import { aj } from "../lib/arcjet.js";
 
 export default async function rateLimit(req, res, next) {
     try {
         const decision = await aj.protect(req, {
-            request: 1,
+            requested: 1,
         });
 
         if (decision.isDenied()) {
-            if (decision.isRateLimited()) {
+            if (decision.reason.isRateLimit()) {
                 return res.status(429).json({
                     error: "Rate limited",
                 });
-            } else if (decision.isBot()) {
+            } else if (decision.reason.isBot()) {
                 return res.status(403).json({
                     error: "Blocked by bot protection",
                 });
@@ -20,14 +20,12 @@ export default async function rateLimit(req, res, next) {
                     error: "Blocked by Arcjet",
                 });
             }
-
-            return;
         }
 
         // Check for spoofed bots
         if (
             decision.results.some(
-                (result) => result.isBot() && result.reason.isSpoof(),
+                (result) => result.reason.isBot && result.reason.isBot() && result.reason.isSpoof(),
             )
         ) {
             return res.status(403).json({
