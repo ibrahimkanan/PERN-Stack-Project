@@ -1,4 +1,4 @@
-import { aj } from "@arcjet/node";
+import  aj  from "@arcjet/node";
 
 export default async function rateLimit(req, res, next) {
     try {
