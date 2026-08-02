@@ -8,6 +8,7 @@ export const useProductStore = create((set, get) => ({
     products: [],
     isLoading: false,
     error: null,
+    cuurentProduct: null,
 
     formData: {
         name: "",
@@ -79,6 +80,41 @@ export const useProductStore = create((set, get) => ({
             toast.error(
                 err.response.data.message || "Failed to delete product",
             );
+        } finally {
+            set({ loading: false });
+        }
+    },
+
+    fetchProduct: async (id) => {
+        set({ loading: true });
+        try {
+            const response = await axios.get(`${BASE_URL}/products/${id}`);
+            set({
+                cuurentProduct: response.data.data,
+                formData: response.data.data,
+                error: null,
+                loading: false,
+            });
+        } catch (error) {
+            set({ error: error.message, loading: false, currentProduct: null });
+            toast.error("Failed to fetch product");
+        } finally {
+            set({ loading: false });
+        }
+    },
+
+    updateProduct: async (id) => {
+        try {
+            const { formData } = get();
+            const response = await axios.put(
+                `${BASE_URL}/products/${id}`,
+                formData,
+            );
+            set({ currentProduct: response.data.data, error: null });
+            toast.success("Product updated successfully");
+        } catch (error) {
+            set({ error: error.message, loading: false, currentProduct: null });
+            toast.error("Failed to update product");
         } finally {
             set({ loading: false });
         }

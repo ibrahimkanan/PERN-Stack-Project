@@ -92,8 +92,7 @@ export const updateProduct = async (req, res) => {
         UPDATE  PRODUCTS
             SET name = ${name},
             price = ${price},
-            image = ${image},
-            updated_at = NOW()
+            image = ${image}
             WHERE id = ${id}
             RETURNING *;
         `;
