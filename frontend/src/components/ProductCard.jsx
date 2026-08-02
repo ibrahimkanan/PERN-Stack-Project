@@ -35,7 +35,10 @@ function ProductCard({ product }) {
 
                     <button
                         className="btn btn-sm btn-error  btn-outline"
-                        onClick={() => deleteProduct(product.id)}
+                        onClick={(e) => {
+                            e.stopPropagation();
+                            deleteProduct(product.id);
+                        }}
                     >
                         <Trash2Icon className="size-4" />
                     </button>
